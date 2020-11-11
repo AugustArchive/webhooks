@@ -54,7 +54,7 @@ module.exports = {
    * @returns {boolean}
    */
   isSponsorshipEvent(data) {
-    return data.hasOwnProperty('action') && data.includes('sponsorship');
+    return data.hasOwnProperty('action') && data.hasOwnProperty('sponsorship');
   },
 
   /**
