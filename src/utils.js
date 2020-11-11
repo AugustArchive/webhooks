@@ -33,9 +33,9 @@ module.exports = {
    */
   validateSignature(signature) {
     const sig = createHmac('sha1', process.env.SECRET).update(signature).digest('hex');
-    console.log(`Signature: ${sig}\nApplication Secret: ${process.env.SECRET}`);
+    console.log(`Signature: ${sig}\nGitHub Signature: ${signature}`);
 
-    return sig === process.env.SECRET;
+    return sig === signature;
   }
 
 };
