@@ -33,7 +33,7 @@ module.exports = {
    * @param {string} body The body to check
    */
   validateSignature(signature, body) {
-    const sig = `sha1=${createHmac('sha1', body).update(signature).digest('hex')}`;
+    const sig = `sha1=${createHmac('sha1', process.env.SECRET).update(body).digest('hex')}`;
     console.log(`Signature: ${sig}\nGitHub Signature: ${signature}`);
 
     return signature === sig;
