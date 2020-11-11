@@ -35,7 +35,7 @@ module.exports = {
     const sig = createHmac('sha1', process.env.SECRET).update(signature).digest('hex');
     console.log(`Signature: ${sig}\nGitHub Signature: ${signature}`);
 
-    return sig === signature;
+    return `sha1=${sig}` === signature;
   }
 
 };
