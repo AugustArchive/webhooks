@@ -39,6 +39,8 @@ router.get('/', (_, res) => res.status(200).json({ hello: 'world' }));
 router.post('/github', (req, res) => {
   console.log(req.headers);
   console.log(req.body);
+
+  return res.status(204).end();
 });
 
 module.exports = router;
