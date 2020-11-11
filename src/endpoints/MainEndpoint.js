@@ -20,30 +20,47 @@
  * SOFTWARE.
  */
 
-const { HttpClient } = require('@augu/orchid');
-const { version } = require('../../package.json');
 const { Router } = require('express');
 const utils = require('../utils');
 
 const router = Router();
-const http = new HttpClient({
-  defaults: {
-    headers: {
-      'User-Agent': `webhook.floofy.dev (v${version})`
-    }
-  }
-});
 
 router.get('/', (_, res) => res.status(200).json({ hello: 'world' }));
 
-router.post('/github', (req, res) => {
+router.post('/github', async (req, res) => {
   if (!req.headers.hasOwnProperty('x-hub-signature')) return res.status(406).json({ message: 'Missing `X-Hub-Signature` signature header' });
 
   const valid = utils.validateSignature(req.headers['x-hub-signature'], JSON.stringify(req.body));
-  console.log(req.body);
-  console.log(`valid: ${valid ? 'yes' : 'no'}.`);
+  if (!valid) return res.status(403).json({ message: 'Invalid `X-Hub-Signature` signature.' });
 
-  return res.status(204).send();
+  const data = req.body;
+
+  // For sponsorships
+  if (utils.isSponsorshipEvent(data)) {
+    switch (data.action) {
+      case 'pending_tier_change':
+        await utils.onSponsorPendingTierChange(req.body);
+        break;
+
+      case 'pending_cancellation':
+        await utils.onSponsorPendingCancel(req.body);
+        break;
+
+      case 'tier_changed':
+        await utils.onSponsorTierChange(req.body);
+        break;
+
+      case 'cancelled':
+        await utils.onSponsorCancel(req.body);
+        break;
+
+      case 'created':
+        await utils.onSponsorCreate(req.body);
+        break;
+    }
+  }
+
+  return res.status(200).json({ ok: true });
 });
 
 module.exports = router;
