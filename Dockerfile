@@ -8,4 +8,6 @@ RUN yarn
 RUN npm i -g eslint
 RUN npm run lint
 
+ENV CONTAINER=true
+
 CMD [ "npm", "start" ]

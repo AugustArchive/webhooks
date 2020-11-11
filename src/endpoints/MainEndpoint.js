@@ -34,6 +34,11 @@ const http = new HttpClient({
   }
 });
 
-router.get('/', (_, res) => res.status(200).send('hello, world.'));
+router.get('/', (_, res) => res.status(200).json({ hello: 'world' }));
+
+router.post('/github', (req, res) => {
+  console.log(req.headers);
+  console.log(req.body);
+});
 
 module.exports = router;
