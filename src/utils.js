@@ -20,4 +20,20 @@
  * SOFTWARE.
  */
 
+const { createHmac } = require('crypto');
 
+/**
+ * Extra utilities used in this application
+ */
+module.exports = {
+
+  /**
+   * Validates a SHA1-encoded string to check if it equals the same
+   * @param {string} signature The signature to use
+   */
+  validateSignature(signature) {
+    const sig = `sha1=${createHmac('sha1', process.env.SECRET).update(signature).digest('hex')}`;
+    return sig === secret;
+  }
+
+};

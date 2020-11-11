@@ -20,4 +20,20 @@
  * SOFTWARE.
  */
 
+const { HttpClient } = require('@augu/orchid');
+const { version } = require('../../package.json');
+const { Router } = require('express');
+const utils = require('../utils');
 
+const router = Router();
+const http = new HttpClient({
+  defaults: {
+    headers: {
+      'User-Agent': `webhook.floofy.dev (v${version})`
+    }
+  }
+});
+
+router.get('/', (_, res) => res.status(200).send('hello, world.'));
+
+module.exports = router;

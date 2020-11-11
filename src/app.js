@@ -20,4 +20,43 @@
  * SOFTWARE.
  */
 
+const { createLogger } = require('@augu/logging');
+const { join } = require('path');
+const dotenv = require('@augu/dotenv');
+const Server = require('./structures/Server');
 
+const logger = createLogger({ namespace: 'Master', transports: [] });
+dotenv.parse({
+  populate: true,
+  file: join(__dirname, '..', '.env'),
+  schema: {
+    NODE_ENV: {
+      type: 'string',
+      oneOf: ['development', 'production'],
+      default: 'development'
+    },
+    SECRET: 'string',
+    PORT: {
+      default: 3621,
+      type: 'int'
+    }
+  }
+});
+
+logger.info(`Now creating service... (${process.env.DOCKER_CONTAINER === 'true' ? 'containerized' : 'not using Docker'})`);
+const server = new Server();
+
+server
+  .load()
+  .then(() => logger.info('Initialised server.'))
+  .catch((error) => {
+    logger.error(':x: Unable to initialise server', error);
+    process.exit(1);
+  });
+
+process.on('SIGINT', () => {
+  logger.info('Received SIGINT, now closing...');
+  server.close();
+
+  process.exit(0);
+});
