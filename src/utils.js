@@ -32,7 +32,9 @@ module.exports = {
    * @param {string} signature The signature to use
    */
   validateSignature(signature) {
-    const sig = `sha1=${createHmac('sha1', process.env.SECRET).update(signature).digest('hex')}`;
+    const sig = createHmac('sha1', process.env.SECRET).update(signature).digest('hex');
+    console.log(`Signature: ${sig}\nApplication Secret: ${process.env.SECRET}`);
+
     return sig === process.env.SECRET;
   }
 
