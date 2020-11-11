@@ -40,6 +40,7 @@ router.post('/github', (req, res) => {
   if (!req.headers.hasOwnProperty('x-hub-signature')) return res.status(406).json({ message: 'Missing `X-Hub-Signature` signature header' });
 
   const valid = utils.validateSignature(req.headers['x-hub-signature']);
+  console.log(req.body);
   console.log(`valid: ${valid ? 'yes' : 'no'}.`);
 
   return res.status(204).send();

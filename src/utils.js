@@ -32,10 +32,10 @@ module.exports = {
    * @param {string} signature The signature to use
    */
   validateSignature(signature) {
-    const sig = createHmac('sha1', process.env.SECRET).update(signature).digest('hex');
+    const sig = `sha1=${createHmac('sha1', process.env.SECRET).update(signature).digest('hex')}`;
     console.log(`Signature: ${sig}\nGitHub Signature: ${signature}`);
 
-    return `sha1=${sig}` === signature;
+    return signature === sig;
   }
 
 };
