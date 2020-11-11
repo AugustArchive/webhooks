@@ -30,9 +30,10 @@ module.exports = {
   /**
    * Validates a SHA1-encoded string to check if it equals the same
    * @param {string} signature The signature to use
+   * @param {string} body The body to check
    */
-  validateSignature(signature) {
-    const sig = `sha1=${createHmac('sha1', process.env.SECRET).update(signature).digest('hex')}`;
+  validateSignature(signature, body) {
+    const sig = `sha1=${createHmac('sha1', body).update(signature).digest('hex')}`;
     console.log(`Signature: ${sig}\nGitHub Signature: ${signature}`);
 
     return signature === sig;
