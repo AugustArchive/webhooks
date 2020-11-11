@@ -37,10 +37,12 @@ const http = new HttpClient({
 router.get('/', (_, res) => res.status(200).json({ hello: 'world' }));
 
 router.post('/github', (req, res) => {
-  console.log(req.headers);
-  console.log(req.body);
+  if (!req.headers.hasOwnProperty('x-hub-signature')) return res.status(406).json({ message: 'Missing `X-Hub-Signature` signature header' });
 
-  return res.status(204).end();
+  const valid = utils.validateSignature(req.headers['x-hub-signature']);
+  console.log(`valid: ${valid ? 'yes' : 'no'}.`);
+
+  return res.status(204).send();
 });
 
 module.exports = router;
