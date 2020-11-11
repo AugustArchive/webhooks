@@ -48,6 +48,8 @@ module.exports = class Server {
 
   async load() {
     this.logger.info(':information_source: Now booting up server...');
+
+    this.app.use(express.json());
     this.app.use((_, res, next) => {
       res.setHeader('X-Powered-By', 'auguwu tehc');
       next();

@@ -33,7 +33,7 @@ module.exports = {
    */
   validateSignature(signature) {
     const sig = `sha1=${createHmac('sha1', process.env.SECRET).update(signature).digest('hex')}`;
-    return sig === secret;
+    return sig === process.env.SECRET;
   }
 
 };
