@@ -63,7 +63,7 @@ module.exports = {
    */
   sendWebhook(data) {
     if (!process.env.DISCORD_WEBHOOK_URL) return;
-    return http.post(`${process.env.DISCORD_WEBHOOK_URL}?wait=true`, { data });
+    return http.request({ method: 'post', url: `${process.env.DISCORD_WEBHOOK_URL}?wait=true`, data });
   },
 
   /**
@@ -77,15 +77,16 @@ module.exports = {
     const sponsorable = res2.json();
 
     const webhook = {
-      username: sponsor.name === null ? sponsor.login : sponsor.name,
-      avatar_url: data.sponsor.avatar_url,
+      username: sponsorable.login,
+      avatar_url: sponsorable.avatar_url,
       embeds: [
         {
-          title: `[ 🎉 Sponsored ${sponsorable.name === null ? sponsorable.login : sponsorable.name} ]`,
+          title: `[ 🎉 Sponsored ${sponsor.login} ]`,
+          url: `https://github.com/sponsors/${sponsor.login}`,
           color: 0x4D4F9C,
           description: [
             `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
-            `• **Tier**: ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
+            `• **Tier**: ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars} USD)`
           ].join('\n')
         }
       ]
@@ -98,21 +99,17 @@ module.exports = {
    * Ran when a sponsor has a pending cancellation
    */
   async onSponsorPendingCancel(data) {
-    const res1 = await http.get(data.sponsorship.sponsor.url);
-    const sponsor = res1.json();
-
-    const res2 = await http.get(data.sponsorship.sponsorable.url);
-    const sponsorable = res2.json();
+    const res = await http.get(data.sponsorship.sponsorable.url);
+    const sponsorable = res.json();
 
     const webhook = {
-      username: sponsor.name === null ? sponsor.login : sponsor.name,
-      avatar_url: data.sponsor.avatar_url,
       embeds: [
         {
-          title: `[ ✏️ Cancelling Sponsorship with ${sponsorable.name === null ? sponsorable.login : sponsorable.name} ]`,
+          title: '[ ✏️ Cancelling Sponsorship ]',
           color: 0x4D4F9C,
           description: [
-            `• **Effective Date**: ${new Date(data.sponsorship.effective_date)}`,
+            `• **Sponsor**: ${sponsorable.name}`,
+            `• **Effective Date**: ${new Date(data.effective_date)}`,
             `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
             `• **Tier**: ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
           ].join('\n')
@@ -127,20 +124,16 @@ module.exports = {
    * Ran when a sponsor entity is pending on their tier change
    */
   async onSponsorPendingTierChange(data) {
-    const res = await http.get(data.sponsorship.sponsor.url);
-    const sponsor = res.json();
-
     const webhook = {
-      username: sponsor.name === null ? sponsor.login : sponsor.name,
-      avatar_url: data.sponsor.avatar_url,
       embeds: [
         {
           title: '[ ✏️ Pending Tier Change ]',
           color: 0x4D4F9C,
           description: [
-            `• **Effective Date**: ${new Date(data.sponsorship.effective_date)}`,
+            `• **Sponsor**: ${data.sponsorship.sponsorable.login}`,
+            `• **Effective Date**: ${new Date(data.effective_date)}`,
             `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
-            `• **From -> To Tier**: ${data.sponsorship.changes.tier.from.name} ($${data.sponsorship.changes.tier.from.monthly_price_in_dollars}) -> ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
+            `• **Tier**: ${data.changes.tier.from.name} ($${data.changes.tier.from.monthly_price_in_dollars}) -> ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
           ].join('\n')
         }
       ]
@@ -153,20 +146,16 @@ module.exports = {
    * Ran when a sponsor entity has stopped sponsoring
    */
   async onSponsorCancel(data) {
-    const res1 = await http.get(data.sponsorship.sponsor.url);
-    const sponsor = res1.json();
-
-    const res2 = await http.get(data.sponsorship.sponsorable.url);
-    const sponsorable = res2.json();
+    const res = await http.get(data.sponsorship.sponsorable.url);
+    const sponsorable = res.json();
 
     const webhook = {
-      username: sponsor.name === null ? sponsor.login : sponsor.name,
-      avatar_url: data.sponsor.avatar_url,
       embeds: [
         {
-          title: `[ ✏️ Cancelled Sponsorship with ${sponsorable.name === null ? sponsorable.login : sponsorable.name} ]`,
+          title: '[ ✏️ Ended Sponsorship ]',
           color: 0x4D4F9C,
           description: [
+            `• **Sponsor**: ${sponsorable.name}`,
             `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
             `• **Tier**: ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
           ].join('\n')
@@ -185,15 +174,16 @@ module.exports = {
     const sponsor = res.json();
 
     const webhook = {
-      username: sponsor.name === null ? sponsor.login : sponsor.name,
-      avatar_url: data.sponsor.avatar_url,
+      username: sponsor.login,
+      avatar_url: sponsor.avatar_url,
       embeds: [
         {
           title: '[ ✏️ Tier Changed ]',
           color: 0x4D4F9C,
           description: [
+            `• **Sponsor**: ${data.sponsorship.sponsorable.login}`,
             `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
-            `• **From -> To Tier**: ${data.sponsorship.changes.tier.from.name} ($${data.sponsorship.changes.tier.from.monthly_price_in_dollars}) -> ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
+            `• **From -> To Tier**: ${data.changes.tier.from.name} ($${data.changes.tier.from.monthly_price_in_dollars}) -> ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
           ].join('\n')
         }
       ]

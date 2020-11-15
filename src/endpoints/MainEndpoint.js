@@ -34,16 +34,15 @@ router.post('/github', async (req, res) => {
   if (!valid) return res.status(403).json({ message: 'Invalid `X-Hub-Signature` signature.' });
 
   const data = req.body;
-
   if (data.hasOwnProperty('hook')) {
     const type = data.hook.type;
     if (type === 'SponsorsListing') {
       await utils.sendWebhook({
-        content: '[**GitHub Sponsors**]: Webhook linked successfully :thumbsup:'
+        content: `[**GitHub Sponsors Webhook | ${data.sender.login}**]: Webhook linked successfully :thumbsup:`
       });
-    }
 
-    return res.status(204).json({ ok: true });
+      return res.status(200).json({ ok: true });
+    }
   }
 
   // For sponsorships

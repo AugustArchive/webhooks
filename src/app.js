@@ -30,6 +30,10 @@ dotenv.parse({
   populate: true,
   file: join(__dirname, '..', '.env'),
   schema: {
+    DISCORD_WEBHOOK_URL: {
+      type: 'string',
+      default: undefined
+    },
     NODE_ENV: {
       type: 'string',
       oneOf: ['development', 'production'],
