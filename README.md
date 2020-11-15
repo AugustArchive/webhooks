@@ -1,9 +1,13 @@
 # webhook.floofy.dev
 > :chestnut: **| Internal API for webhook systems made in Node.js using Express**
 
+## GitHub Sponsors
 ![created sponsor](./assets/created.png)
 
 ![deleted sponsor](./assets/deleted.png)
+
+## Sentry
+soon:tm:
 
 ## Installation
 ### Requirements
