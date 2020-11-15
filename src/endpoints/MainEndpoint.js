@@ -35,6 +35,17 @@ router.post('/github', async (req, res) => {
 
   const data = req.body;
 
+  if (data.hasOwnProperty('hook')) {
+    const type = data.hook.type;
+    if (type === 'SponsorsListing') {
+      await utils.sendWebhook({
+        content: '[**GitHub Sponsors**]: Webhook linked successfully :thumbsup:'
+      });
+    }
+
+    return res.status(204).json({ ok: true });
+  }
+
   // For sponsorships
   if (utils.isSponsorshipEvent(data)) {
     switch (data.action) {
