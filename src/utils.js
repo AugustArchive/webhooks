@@ -44,8 +44,10 @@ module.exports = {
    * @param {string} signature The signature to use
    * @param {string} body The body to check
    */
-  validateSignature(signature, body) {
-    const sig = `sha1=${createHmac('sha1', process.env.SECRET).update(body).digest('hex')}`;
+  validateSignature(signature, body, includeSecret = true) {
+    const sha = includeSecret ? createHmac('sha1', process.env.SECRET) : createHmac('sha1');
+    const sig = `sha1=${sha.update(body).digest('hex')}`;
+
     return signature === sig;
   },
 

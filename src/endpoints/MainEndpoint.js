@@ -82,7 +82,8 @@ router.post('/sentry', async (req, res) => {
 
   const valid = utils.validateSignature(
     req.headers['sentry-hook-signature'],
-    JSON.stringify(req.body)
+    JSON.stringify(req.body),
+    false
   );
 
   console.log(valid);
