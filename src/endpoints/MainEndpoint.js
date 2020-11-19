@@ -74,7 +74,9 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log('E');
+  console.log(req.headers);
+  console.log(req.body);
+
   if (!req.headers['sentry-hook-signature']) return res.status(406).json({
     message: 'Missing `Sentry-Hook-Signature` header'
   });
