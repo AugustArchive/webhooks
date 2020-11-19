@@ -74,21 +74,32 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log(req.body.event);
+  console.log(req.body.event.stacktrace.frames);
 
   const event = req.body.event;
   const webhook = {
     content: ':umbrella2: **| Received new event from Sentry, view below for trace**',
     embeds: [
       {
-        title: `[ ${event.metadata.title || 'Unknown Error'} ]`,
-        description: [
-          `• Project: **${req.body.project || 'Unknown'}**`,
-          `• Environment: **${event.environment || 'Unknown'}**`,
-          `• Platform SDK: **${event.platform || 'Unknown'}**`
-        ].join('\n'),
+        title: `[ Error: ${event.metadata.title || 'Unknown'} ]`,
         color: 0xE35D6A,
-        fields: []
+        fields: [
+          {
+            name: '❯ Project',
+            value: req.body.project || 'unknown',
+            inline: true
+          },
+          {
+            name: '❯ Environment',
+            value: req.body.environment || 'unknown',
+            inline: true
+          },
+          {
+            name: '❯ Platform SDK',
+            value: event.platform || 'unknown',
+            inline: true
+          }
+        ]
       }
     ]
   };
