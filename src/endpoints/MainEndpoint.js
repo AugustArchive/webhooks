@@ -82,7 +82,7 @@ router.post('/sentry', async (req, res) => {
     embeds: [
       {
         color: 0xE35D6A,
-        description: `[[View Here]](${req.body.url})\n\n**${req.body.message}**`,
+        description: `**${req.body.message}**\n\n[[View Here]](${req.body.url})`,
         fields: [
           {
             name: '❯   Project',
