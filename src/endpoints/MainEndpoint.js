@@ -118,49 +118,32 @@ router.post('/sentry', async (req, res) => {
   });
 
   const frames = event.stacktrace.frames;
-  if (frames.length) {
-    let description = ['> :umbrella: **| This is under a seperate embed to not bleed in the main embed.**', ''];
-    const other = [];
+  const stacktrace = [];
+  for (let i = 0; i < frames.length; i++) {
+    const frame = frames[i];
+    const contexts = ['```py'];
 
-    const w = {
-      color: 0xE35D6A
-    };
+    if (frame.pre_context) contexts.push(
+      '# Pre Context',
+      frame.pre_context.join('\n'),
+      ''
+    );
 
-    for (let i = 0; i < frames.length; i++) {
-      const frame = frames[i];
-      const contexts = ['```py'];
+    if (frame.post_context) contexts.push(
+      '# Post Context',
+      frame.post_context.join('\n'),
+      ''
+    );
 
-      if (frame.pre_context) contexts.push(
-        '# Pre Context',
-        frame.pre_context.join('\n'),
-        ''
-      );
+    contexts.push('```');
 
-      if (frame.post_context) contexts.push(
-        '# Post Context',
-        frame.post_context.join('\n'),
-        ''
-      );
-
-      contexts.push('```');
-
-      other.push(
-        `❯ **Under "${frame.function}"**`,
-        '',
-        `• **Module**: ${frame.module || 'unknown'}`,
-        `• **Absolute Path**: ${frame.abs_path}`
-      );
-
-      if (contexts.length !== 2) other.push(
-        '',
-        contexts.join('\n')
-      );
-    }
-
-    description = description.concat(other);
-    w.description = description.join('\n');
-    webhook.embeds.push(w);
+    stacktrace.push(
+      `❯ Module **${frame.module || 'none'}** (${frame.abs_path})`,
+      contexts.join('\n')
+    );
   }
+
+  if (stacktrace.length) webhook.embeds[0].description = stacktrace.join('\n\n');
 
   await utils.sendWebhook(webhook);
   return res.status(200).json({ ok: true });
