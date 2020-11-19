@@ -81,7 +81,6 @@ router.post('/sentry', async (req, res) => {
     content: ':umbrella2: **| Received new event from Sentry, view below for trace**',
     embeds: [
       {
-        title: `[ Error: ${event.metadata.title || 'Unknown'} ]`,
         color: 0xE35D6A,
         fields: [
           {
@@ -121,29 +120,15 @@ router.post('/sentry', async (req, res) => {
   const stacktrace = [];
   for (let i = 0; i < frames.length; i++) {
     const frame = frames[i];
-    const contexts = ['```py'];
-
-    if (frame.pre_context) contexts.push(
-      '# Pre Context',
-      frame.pre_context.join('\n'),
-      ''
-    );
-
-    if (frame.post_context) contexts.push(
-      '# Post Context',
-      frame.post_context.join('\n'),
-      ''
-    );
-
-    contexts.push('```');
-
-    stacktrace.push(
-      `❯ Module **${frame.module || 'none'}** (${frame.abs_path})`,
-      contexts.join('\n')
-    );
+    stacktrace.push(`   • in ${frame.abs_path}`);
   }
 
-  if (stacktrace.length) webhook.embeds[0].description = stacktrace.join('\n\n');
+  if (stacktrace.length) webhook.embeds[0].description = [
+    '```js',
+    `Error: ${event.metadata.title || 'unknown'}`,
+    stacktrace.join('\n'),
+    '```'
+  ];
 
   await utils.sendWebhook(webhook);
   return res.status(200).json({ ok: true });
