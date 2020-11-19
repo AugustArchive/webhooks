@@ -128,7 +128,7 @@ router.post('/sentry', async (req, res) => {
     `Error: ${event.metadata.title || 'unknown'}`,
     stacktrace.join('\n'),
     '```'
-  ];
+  ].join('\n');
 
   await utils.sendWebhook(webhook).catch(console.error);
   return res.status(200).json({ ok: true });
