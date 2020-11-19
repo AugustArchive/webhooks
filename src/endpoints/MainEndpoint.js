@@ -83,13 +83,28 @@ router.post('/sentry', async (req, res) => {
       {
         title: `[ ${event.metadata.title || 'Unknown Error'} ]`,
         description: [
-          '- Culprit: none owo',
-          '- Project: some dummy project'
+          `• Project: **${req.body.project || 'Unknown'}**`,
+          `• Environment: **${event.environment || 'Unknown'}**`,
+          `• Platform SDK: **${event.platform || 'Unknown'}**`
         ].join('\n'),
-        color: 0xE35D6A
+        color: 0xE35D6A,
+        fields: []
       }
     ]
   };
+
+  const tags = [];
+  if (event.tags)
+    for (let i = 0; i < event.tags.length; i++) {
+      const [name, value] = event.tags[i];
+      tags.push(`• **${name}**: ${value}`);
+    }
+
+  if (tags.length) webhook.embeds[0].fields.push({
+    name: '❯ Tags',
+    value: tags.join('\n'),
+    inline: true
+  });
 
   await utils.sendWebhook(webhook);
   return res.status(200).json({ ok: true });
