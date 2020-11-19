@@ -74,8 +74,6 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log(req.body.event.stacktrace.frames);
-
   const event = req.body.event;
   const webhook = {
     content: ':umbrella2: **| Received new event from Sentry, view below for trace**',
@@ -115,20 +113,6 @@ router.post('/sentry', async (req, res) => {
     value: tags.join('\n'),
     inline: true
   });
-
-  const frames = event.stacktrace.frames;
-  const stacktrace = [];
-  for (let i = 0; i < frames.length; i++) {
-    const frame = frames[i];
-    stacktrace.push(`   • in ${frame.abs_path}`);
-  }
-
-  if (stacktrace.length) webhook.embeds[0].description = [
-    '```js',
-    `Error: ${event.metadata.title || 'unknown'}`,
-    stacktrace.join('\n'),
-    '```'
-  ].join('\n');
 
   await utils.sendWebhook(webhook).catch(console.error);
   return res.status(200).json({ ok: true });
