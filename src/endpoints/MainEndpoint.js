@@ -118,9 +118,9 @@ router.post('/sentry', async (req, res) => {
   });
 
   const frames = [];
-  if (req.body.stacktrace.frames.length) {
-    for (let i = 0; i < req.body.stacktrace.frames.length; i++) {
-      const frame = req.body.stacktrace.frames[i];
+  if (event.stacktrace.frames.length) {
+    for (let i = 0; i < event.stacktrace.frames.length; i++) {
+      const frame = event.stacktrace.frames[i];
       const title = `# Caused at "${frame.function}" @ ${frame.abs_path} (module: ${frame.module || 'none'})`;
 
       frames.push(title);
