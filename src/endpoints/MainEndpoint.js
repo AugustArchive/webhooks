@@ -85,6 +85,7 @@ router.post('/sentry', async (req, res) => {
     JSON.stringify(req.body)
   );
 
+  console.log(valid);
   if (!valid) return res.status(401).json({ message: '`Sentry-Hook-Signature` was invalid' });
 
   return res.status(200).json({ ok: true });
