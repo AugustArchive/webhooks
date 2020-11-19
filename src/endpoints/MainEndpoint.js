@@ -74,23 +74,24 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log(req.headers);
-  console.log(req.body);
+  console.log(req.body.event);
 
-  if (!req.headers['sentry-hook-signature']) return res.status(406).json({
-    message: 'Missing `Sentry-Hook-Signature` header'
-  });
+  const webhook = {
+    content: ':umbrella2: **| Received new event from Sentry, view below for trace**',
+    embeds: [
+      {
+        title: 'test error',
+        description: [
+          '- Culprit: none owo',
+          '- Project: some dummy project'
+        ].join('\n'),
+        color: 0xE35D6A
+      }
+    ]
+  };
 
-  const valid = utils.validateSignature(
-    req.headers['sentry-hook-signature'],
-    JSON.stringify(req.body)
-  );
-
-  if (!valid) return res.status(403).json({
-    message: 'Invalid payload provided.'
-  });
-
-  console.log(req.body);
+  await utils.sendWebhook(webhook);
+  return res.status(200).json({ ok: true });
 });
 
 module.exports = router;
