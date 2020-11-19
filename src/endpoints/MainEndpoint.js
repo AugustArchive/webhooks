@@ -117,22 +117,47 @@ router.post('/sentry', async (req, res) => {
     inline: true
   });
 
-  const frames = [];
-  if (event.stacktrace.frames.length) {
-    for (let i = 0; i < event.stacktrace.frames.length; i++) {
-      const frame = event.stacktrace.frames[i];
-      const title = `# Caused at "${frame.function}" @ ${frame.abs_path} (module: ${frame.module || 'none'})`;
+  const frames = event.stacktrace.frames;
+  if (frames.length) {
+    let description = ['> :umbrella: **| This is under a seperate embed to not bleed in the main embed.**', ''];
+    const other = [];
 
-      frames.push(title);
-    }
+    const w = {
+      color: 0xE35D6A
+    };
+
+    const frame = frames[i];
+    const contexts = ['```py'];
+
+    if (frame.pre_context) contexts.push(
+      '# Pre Context',
+      frame.pre_context.join('\n'),
+      ''
+    );
+
+    if (frame.post_context) contexts.push(
+      '# Post Context',
+      frame.post_context.join('\n'),
+      ''
+    );
+
+    contexts.push('```');
+
+    other.push(
+      `❯ [${i + 1}/${frames.length}] **Function ${frame.function}**`,
+      '',
+      `• **Module**: ${frame.module || 'unknown'}`,
+      `• **Absolute Path**: ${frame.abs_path}`
+    );
+
+    if (contexts.length !== 2) other.push(
+      '',
+      contexts.join('\n')
+    );
+
+    w.description = description.join('\n');
+    webhook.embeds.push(w);
   }
-
-  if (frames.length)
-    webhook.embeds[0].description = [
-      '```py',
-      frames.join('\n\n'),
-      '```'
-    ].join('\n');
 
   await utils.sendWebhook(webhook);
   return res.status(200).json({ ok: true });
