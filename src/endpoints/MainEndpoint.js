@@ -74,6 +74,24 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
+  console.log(req.headers);
+  console.log(req.body);
+
+  // just close it when we don't have it
+  if (!req.headers.hasOwnProperty('sentry-hook-signature')) return res.status(204).end();
+
+  const valid = utils.validateSignature(
+    req.headers['sentry-hook-signature'],
+    JSON.stringify(req.body)
+  );
+
+  if (!valid) return res.status(401).json({ message: '`Sentry-Hook-Signature` was invalid' });
+
+  return res.status(200).json({ ok: true });
+});
+
+/*
+  // OH THIS WAS FOR TESTING LMAO
   console.log(req.body);
 
   const event = req.body.event;
@@ -119,6 +137,6 @@ router.post('/sentry', async (req, res) => {
 
   await utils.sendWebhook(webhook).catch(console.error);
   return res.status(200).json({ ok: true });
-});
+*/
 
 module.exports = router;
