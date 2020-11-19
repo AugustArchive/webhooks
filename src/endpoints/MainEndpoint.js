@@ -126,35 +126,38 @@ router.post('/sentry', async (req, res) => {
       color: 0xE35D6A
     };
 
-    const frame = frames[i];
-    const contexts = ['```py'];
+    for (let i = 0; i < frames.length; i++) {
+      const frame = frames[i];
+      const contexts = ['```py'];
 
-    if (frame.pre_context) contexts.push(
-      '# Pre Context',
-      frame.pre_context.join('\n'),
-      ''
-    );
+      if (frame.pre_context) contexts.push(
+        '# Pre Context',
+        frame.pre_context.join('\n'),
+        ''
+      );
 
-    if (frame.post_context) contexts.push(
-      '# Post Context',
-      frame.post_context.join('\n'),
-      ''
-    );
+      if (frame.post_context) contexts.push(
+        '# Post Context',
+        frame.post_context.join('\n'),
+        ''
+      );
 
-    contexts.push('```');
+      contexts.push('```');
 
-    other.push(
-      `❯ **Under "${frame.function}"**`,
-      '',
-      `• **Module**: ${frame.module || 'unknown'}`,
-      `• **Absolute Path**: ${frame.abs_path}`
-    );
+      other.push(
+        `❯ **Under "${frame.function}"**`,
+        '',
+        `• **Module**: ${frame.module || 'unknown'}`,
+        `• **Absolute Path**: ${frame.abs_path}`
+      );
 
-    if (contexts.length !== 2) other.push(
-      '',
-      contexts.join('\n')
-    );
+      if (contexts.length !== 2) other.push(
+        '',
+        contexts.join('\n')
+      );
+    }
 
+    description = description.concat(other);
     w.description = description.join('\n');
     webhook.embeds.push(w);
   }
