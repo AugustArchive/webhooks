@@ -144,7 +144,7 @@ router.post('/sentry', async (req, res) => {
     contexts.push('```');
 
     other.push(
-      `❯ [${i + 1}/${frames.length}] **Function ${frame.function}**`,
+      `❯ **Under "${frame.function}"**`,
       '',
       `• **Module**: ${frame.module || 'unknown'}`,
       `• **Absolute Path**: ${frame.abs_path}`
