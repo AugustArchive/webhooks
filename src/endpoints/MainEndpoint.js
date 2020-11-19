@@ -130,7 +130,7 @@ router.post('/sentry', async (req, res) => {
     '```'
   ];
 
-  await utils.sendWebhook(webhook);
+  await utils.sendWebhook(webhook).catch(console.error);
   return res.status(200).json({ ok: true });
 });
 
