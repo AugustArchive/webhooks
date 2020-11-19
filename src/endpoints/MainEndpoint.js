@@ -74,6 +74,8 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
+  console.log(req.body);
+
   const event = req.body.event;
   const webhook = {
     content: ':umbrella2: **| Received new event from Sentry, view below for trace**',
