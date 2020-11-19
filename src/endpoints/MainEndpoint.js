@@ -76,11 +76,12 @@ router.post('/github', async (req, res) => {
 router.post('/sentry', async (req, res) => {
   console.log(req.body.event);
 
+  const event = req.body.event;
   const webhook = {
     content: ':umbrella2: **| Received new event from Sentry, view below for trace**',
     embeds: [
       {
-        title: 'test error',
+        title: `[ ${event.metadata.title || 'Unknown Error'} ]`,
         description: [
           '- Culprit: none owo',
           '- Project: some dummy project'
