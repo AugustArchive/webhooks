@@ -85,17 +85,17 @@ router.post('/sentry', async (req, res) => {
         color: 0xE35D6A,
         fields: [
           {
-            name: '❯ Project',
+            name: '❯   Project',
             value: req.body.project || 'unknown',
             inline: true
           },
           {
-            name: '❯ Environment',
-            value: req.body.environment || 'unknown',
+            name: '❯   Environment',
+            value: event.environment || 'unknown',
             inline: true
           },
           {
-            name: '❯ Platform SDK',
+            name: '❯   Platform SDK',
             value: event.platform || 'unknown',
             inline: true
           }
@@ -112,10 +112,27 @@ router.post('/sentry', async (req, res) => {
     }
 
   if (tags.length) webhook.embeds[0].fields.push({
-    name: '❯ Tags',
+    name: '❯   Tags',
     value: tags.join('\n'),
     inline: true
   });
+
+  const frames = [];
+  if (req.body.stacktrace.frames.length) {
+    for (let i = 0; i < req.body.stacktrace.frames.length; i++) {
+      const frame = req.body.stacktrace.frames[i];
+      const title = `# Caused at "${frame.function}" @ ${frame.abs_path} (module: ${frame.module || 'none'})`;
+
+      frames.push(title);
+    }
+  }
+
+  if (frames.length)
+    webhook.embeds[0].description = [
+      '```py',
+      frames.join('\n\n'),
+      '```'
+    ].join('\n');
 
   await utils.sendWebhook(webhook);
   return res.status(200).json({ ok: true });
