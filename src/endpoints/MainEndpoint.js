@@ -73,4 +73,21 @@ router.post('/github', async (req, res) => {
   return res.status(200).json({ ok: true });
 });
 
+router.post('/sentry', async (req, res) => {
+  if (!req.headers['sentry-hook-signature']) return res.status(406).json({
+    message: 'Missing `Sentry-Hook-Signature` header'
+  });
+
+  const valid = utils.validateSignature(
+    req.headers['sentry-hook-signature'],
+    JSON.stringify(req.body)
+  );
+
+  if (!valid) return res.status(403).json({
+    message: 'Invalid payload provided.'
+  });
+
+  console.log(req.body);
+});
+
 module.exports = router;
