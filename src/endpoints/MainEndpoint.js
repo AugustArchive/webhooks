@@ -74,7 +74,7 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log(req.body);
+  console.log(req.body.data.project);
 
   // just close it when we don't have it
   if (!req.headers.hasOwnProperty('sentry-hook-signature')) return res.status(204).end();
@@ -102,7 +102,44 @@ router.post('/sentry', async (req, res) => {
               },
               {
                 name: '❯   Actor',
-                value: `${actor.name}${actor.id === 'application' ? ' (automatic)' : ''}`,
+                value: `${actor.name}${actor.type === 'application' ? ' (automatic)' : ''}`,
+                inline: true
+              }
+            ]
+          }
+        ]
+      };
+
+      await utils.sendWebhook(content);
+    } break;
+
+    case 'resolved': {
+      const { actor, data } = req.body;
+      const content = {
+        content: ':umbrella2: Issue has been resolved in project ????',
+        embeds: [
+          {
+            title: `[ ${data.title} (${data.culprit}) ]`,
+            color: 0xE35D6A,
+            fields: [
+              {
+                name: '❯   Platform',
+                value: data.platform,
+                inline: true
+              },
+              {
+                name: '❯   First Spotted At',
+                value: utils.formatDate(data.firstSeen),
+                inline: true
+              },
+              {
+                name: '❯   Last Spotted At',
+                value: utils.formatDate(data.firstSeen),
+                inline: true
+              },
+              {
+                name: '❯   Actor',
+                value: `${actor.name}${actor.type === 'application' ? ' (automatic)' : ''}`,
                 inline: true
               }
             ]
