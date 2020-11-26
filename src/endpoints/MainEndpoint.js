@@ -114,7 +114,13 @@ router.post('/sentry', async (req, res) => {
     } break;
 
     case 'resolved': {
-      const { actor, data } = req.body;
+      const {
+        actor,
+        data: {
+          issue: data
+        }
+      } = req.body;
+
       const content = {
         content: ':umbrella2: Issue has been resolved in project ????',
         embeds: [
