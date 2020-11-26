@@ -74,7 +74,8 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log(req.body.data.issue.project);
+  console.log(req.body);
+  console.log(req.body.data.issue);
 
   // just close it when we don't have it
   if (!req.headers.hasOwnProperty('sentry-hook-signature')) return res.status(204).end();
@@ -84,10 +85,10 @@ router.post('/sentry', async (req, res) => {
     case 'created': {
       const { data, actor } = body;
       const content = {
-        content: ':umbrella2: Received new error in project ????',
+        content: `:umbrella2: Received new error in project **${data.project.name}**`,
         embeds: [
           {
-            title: `[ ${data.title} (${data.culprit}) ]`,
+            title: `[ ${data.title} ]`,
             color: 0xE35D6A,
             fields: [
               {
@@ -96,8 +97,8 @@ router.post('/sentry', async (req, res) => {
                 inline: true
               },
               {
-                name: '❯   First Spotted At',
-                value: utils.formatDate(data.firstSeen),
+                name: '❯   Culprit',
+                value: data.culprit,
                 inline: true
               },
               {
@@ -122,10 +123,10 @@ router.post('/sentry', async (req, res) => {
       } = req.body;
 
       const content = {
-        content: ':umbrella2: Issue has been resolved in project ????',
+        content: `:umbrella2: Issue has been resolved in project **${data.project.name}**`,
         embeds: [
           {
-            title: `[ ${data.title} (${data.culprit}) ]`,
+            title: `[ ${data.title} ]`,
             color: 0xE35D6A,
             fields: [
               {
@@ -133,16 +134,11 @@ router.post('/sentry', async (req, res) => {
                 value: data.platform,
                 inline: true
               },
-              //{
-              //  name: '❯   First Spotted At',
-              //  value: utils.formatDate(data.firstSeen),
-              //  inline: true
-              //},
-              //{
-              //  name: '❯   Last Spotted At',
-              //  value: utils.formatDate(data.firstSeen),
-              //  inline: true
-              //},
+              {
+                name: '❯   Culprit',
+                value: data.culprit,
+                inline: true
+              },
               {
                 name: '❯   Actor',
                 value: `${actor.name}${actor.type === 'application' ? ' (automatic)' : ''}`,
