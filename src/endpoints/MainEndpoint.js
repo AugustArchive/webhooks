@@ -74,122 +74,129 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log(req.body);
-  console.log(req.body.data.issue);
-
   // just close it when we don't have it
   if (!req.headers.hasOwnProperty('sentry-hook-signature')) return res.status(204).end();
 
+  // for resolve / ignore errors
   const body = req.body;
-  switch (body.action) {
-    case 'created': {
-      const { data, actor } = body;
-      const content = {
-        content: `:umbrella2: Received new error in project **${data.project.name}**`,
-        embeds: [
-          {
-            title: `[ ${data.title} ]`,
-            color: 0xE35D6A,
-            fields: [
-              {
-                name: '❯   Platform',
-                value: data.platform,
-                inline: true
-              },
-              {
-                name: '❯   Culprit',
-                value: data.culprit,
-                inline: true
-              },
-              {
-                name: '❯   Actor',
-                value: `${actor.name}${actor.type === 'application' ? ' (automatic)' : ''}`,
-                inline: true
-              }
-            ]
+  if (body.hasOwnProperty('action')) {
+    switch (body.action) {
+      case 'resolved': {
+        const {
+          actor,
+          data: {
+            issue: data
           }
-        ]
-      };
+        } = req.body;
 
-      await utils.sendWebhook(content);
-    } break;
+        const content = {
+          content: `:umbrella2: Issue has been resolved in project **${data.project.name}** by **${actor.name}**${actor.type === 'application' ? ' (automatic)' : ''}`,
+          embeds: [
+            {
+              title: `[ ${data.title} ]`,
+              color: 0xE35D6A,
+              fields: [
+                {
+                  name: '❯   Platform',
+                  value: data.platform,
+                  inline: true
+                },
+                {
+                  name: '❯   Culprit',
+                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  inline: false
+                }
+              ]
+            }
+          ]
+        };
 
-    case 'resolved': {
-      const {
-        actor,
-        data: {
-          issue: data
-        }
-      } = req.body;
+        await utils.sendWebhook(content);
+      } break;
 
-      const content = {
-        content: `:umbrella2: Issue has been resolved in project **${data.project.name}** by **${actor.name}**${actor.type === 'application' ? ' (automatic)' : ''}`,
-        embeds: [
-          {
-            title: `[ ${data.title} ]`,
-            color: 0xE35D6A,
-            fields: [
-              {
-                name: '❯   Platform',
-                value: data.platform,
-                inline: true
-              },
-              {
-                name: '❯   Culprit',
-                value: `**${data.culprit}** (${data.metadata.filename})`,
-                inline: false
-              }
-            ]
+      case 'ignored': {
+        const {
+          actor,
+          data: {
+            issue: data
           }
-        ]
-      };
+        } = req.body;
 
-      await utils.sendWebhook(content);
-    } break;
+        const content = {
+          content: `:umbrella2: Issue has been ignored in project **${data.project.name}** by **${actor.name}**${actor.type === 'application' ? ' (automatic)' : ''}`,
+          embeds: [
+            {
+              title: `[ ${data.title} ]`,
+              color: 0xE35D6A,
+              fields: [
+                {
+                  name: '❯   Platform',
+                  value: data.platform,
+                  inline: true
+                },
+                {
+                  name: '❯    Occured',
+                  value: Number(data.count).toLocaleString('en-US'),
+                  inline: true
+                },
+                {
+                  name: '❯   Culprit',
+                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  inline: false
+                }
+              ]
+            }
+          ]
+        };
 
-    case 'ignored': {
-      const {
-        actor,
-        data: {
-          issue: data
-        }
-      } = req.body;
+        await utils.sendWebhook(content);
+      } break;
+    }
 
-      const content = {
-        content: `:umbrella2: Issue has been ignored in project **${data.project.name}** by **${actor.name}**${actor.type === 'application' ? ' (automatic)' : ''}`,
-        embeds: [
-          {
-            title: `[ ${data.title} ]`,
-            color: 0xE35D6A,
-            fields: [
-              {
-                name: '❯   Platform',
-                value: data.platform,
-                inline: true
-              },
-              {
-                name: '❯    Occured',
-                value: Number(data.count).toLocaleString('en-US'),
-                inline: true
-              },
-              {
-                name: '❯   Culprit',
-                value: `**${data.culprit}** (${data.metadata.filename})`,
-                inline: false
-              }
-            ]
-          }
-        ]
-      };
-
-      await utils.sendWebhook(content);
-    } break;
+    // do not go after this block
+    return res.status(200).json({ ok: true });
   }
 
+  const {
+    project_name: project,
+    event: data,
+    url
+  } = body;
+
+  const content = {
+    content: `:umbrella2: New issue has occured on Sentry in project **${project}**`,
+    embeds: [
+      {
+        title: `[ ${data.title} ]`,
+        url,
+        fields: [
+          {
+            name: '❯   Release (Environment)',
+            value: `${data.release} (**${data.environment}**)`,
+            inline: true
+          },
+          {
+            name: '❯   Platform',
+            value: data.platform,
+            inline: true
+          },
+          {
+            name: '❯   SDK',
+            value: `**${data.sdk.name}** v${data.sdk.version}`,
+            inline: true
+          },
+          {
+            name: '❯   Culprit',
+            value: `**${data.culprit}** (${data.metadata.filename})`,
+            inline: false
+          }
+        ]
+      }
+    ]
+  };
+
+  await utils.sendWebhook(content);
   return res.status(200).json({ ok: true });
 });
-
-// ❯
-// •
 
 module.exports = router;
