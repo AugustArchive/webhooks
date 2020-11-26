@@ -74,7 +74,7 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log(req.body.project);
+  console.log(req.body);
 
   // just close it when we don't have it
   if (!req.headers.hasOwnProperty('sentry-hook-signature')) return res.status(204).end();

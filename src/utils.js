@@ -141,10 +141,12 @@ module.exports = {
    * Ran when a sponsor has a pending cancellation
    */
   async onSponsorPendingCancel(data) {
-    const res = await http.get(data.sponsorship.sponsorable.url);
-    const sponsorable = res.json();
+    const res = await http.get(data.sponsorship.sponsor.url);
+    const sponsor = res.json();
 
     const webhook = {
+      username: sponsor.login,
+      avatar_url: sponsor.avatar_url,
       embeds: [
         {
           title: '[ ✏️ Cancelling Sponsorship ]',
@@ -166,13 +168,18 @@ module.exports = {
    * Ran when a sponsor entity is pending on their tier change
    */
   async onSponsorPendingTierChange(data) {
+    const res = await http.get(data.sponsorship.sponsor.url);
+    const sponsor = res.json();
+
     const webhook = {
+      username: sponsor.login,
+      avatar_url: sponsor.avatar_url,
       embeds: [
         {
           title: '[ ✏️ Pending Tier Change ]',
           color: 0x4D4F9C,
           description: [
-            `• **Sponsor**: ${data.sponsorship.sponsorable.login}`,
+            `• **Sponsor**: ${data.sponsorship.sponsor.login}`,
             `• **Effective Date**: ${new Date(data.effective_date)}`,
             `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
             `• **Tier**: ${data.changes.tier.from.name} ($${data.changes.tier.from.monthly_price_in_dollars}) -> ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
@@ -188,10 +195,12 @@ module.exports = {
    * Ran when a sponsor entity has stopped sponsoring
    */
   async onSponsorCancel(data) {
-    const res = await http.get(data.sponsorship.sponsorable.url);
-    const sponsorable = res.json();
+    const res = await http.get(data.sponsorship.sponsor.url);
+    const sponsor = res.json();
 
     const webhook = {
+      username: sponsor.login,
+      avatar_url: sponsor.avatar_url,
       embeds: [
         {
           title: '[ ✏️ Ended Sponsorship ]',
