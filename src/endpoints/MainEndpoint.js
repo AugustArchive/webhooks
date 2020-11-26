@@ -123,7 +123,7 @@ router.post('/sentry', async (req, res) => {
       } = req.body;
 
       const content = {
-        content: `:umbrella2: Issue has been resolved in project **${data.project.name}**`,
+        content: `:umbrella2: Issue has been resolved in project **${data.project.name}** by **${actor.name}**${actor.type === 'application' ? ' (automatic)' : ''}`,
         embeds: [
           {
             title: `[ ${data.title} ]`,
@@ -136,13 +136,46 @@ router.post('/sentry', async (req, res) => {
               },
               {
                 name: '❯   Culprit',
-                value: data.culprit,
+                value: `**${data.culprit}** (${data.metadata.filename})`,
+                inline: false
+              }
+            ]
+          }
+        ]
+      };
+
+      await utils.sendWebhook(content);
+    } break;
+
+    case 'ignored': {
+      const {
+        actor,
+        data: {
+          issue: data
+        }
+      } = req.body;
+
+      const content = {
+        content: `:umbrella2: Issue has been ignored in project **${data.project.name}** by **${actor.name}**${actor.type === 'application' ? ' (automatic)' : ''}`,
+        embeds: [
+          {
+            title: `[ ${data.title} ]`,
+            color: 0xE35D6A,
+            fields: [
+              {
+                name: '❯   Platform',
+                value: data.platform,
                 inline: true
               },
               {
-                name: '❯   Actor',
-                value: `${actor.name}${actor.type === 'application' ? ' (automatic)' : ''}`,
+                name: '❯    Occured',
+                value: Number(data.count).toLocaleString('en-US'),
                 inline: true
+              },
+              {
+                name: '❯   Culprit',
+                value: `**${data.culprit}** (${data.metadata.filename})`,
+                inline: false
               }
             ]
           }
