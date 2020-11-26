@@ -61,21 +61,21 @@ PORT=
 > Once you gotten the service setup, you can use the following steps on how to use it:
 
 ### Github Sponsors
-- 1. Go to your Sponsors dashboard
-- 2. Go under **Webhooks** and click "Create new Webhook"
-- 3. Fill in the details of what you want to receive, the service will send notifications on events:
+1. Go to your Sponsors dashboard
+2. Go under **Webhooks** and click "Create new Webhook"
+3. Fill in the details of what you want to receive, the service will send notifications on events:
   - Create
   - Pending Tier Change
   - Tier Change Success
   - Cancelling
   - Cancelled
-- 4. Make sure the content type is **application/json**, the secret is the same in your `.env` file, and it's activated
+4. Make sure the content type is **application/json**, the secret is the same in your `.env` file, and it's activated
 
 ### Sentry
-- 1. Go to your organization dashboard
-- 2. Go to "Developer Settings" tab
-- 3. Click "+ Create new Internal Integration"
-- 4. Fill in the details to what you wanna receive, the service will send notifications on events:
+1. Go to your organization dashboard
+2. Go to "Developer Settings" tab
+3. Click "+ Create new Internal Integration"
+4. Fill in the details to what you wanna receive, the service will send notifications on events:
   - **Unresolved Issue**
   - **Resolved Issue**
   - **Ignored Issue**
