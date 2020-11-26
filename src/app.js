@@ -59,7 +59,7 @@ server
   });
 
 process.on('SIGINT', () => {
-  logger.info('Received SIGINT, now closing...');
+  logger.warn('Received SIGINT, now closing...');
   server.close();
 
   process.exit(0);
