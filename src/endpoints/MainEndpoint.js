@@ -74,71 +74,50 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log(req.headers);
-  console.log(req.body);
+  console.log(req.body.project);
 
   // just close it when we don't have it
   if (!req.headers.hasOwnProperty('sentry-hook-signature')) return res.status(204).end();
 
-  const valid = utils.validateSignature(
-    req.headers['sentry-hook-signature'],
-    JSON.stringify(req.body),
-    false
-  );
+  const body = req.body;
+  switch (body.action) {
+    case 'created': {
+      const { data, actor } = body;
+      const content = {
+        content: ':umbrella2: Received new error in project ????',
+        embeds: [
+          {
+            title: `[ ${data.title} (${data.culprit}) ]`,
+            color: 0xE35D6A,
+            fields: [
+              {
+                name: '❯   Platform',
+                value: data.platform,
+                inline: true
+              },
+              {
+                name: '❯   First Spotted At',
+                value: utils.formatDate(data.firstSeen),
+                inline: true
+              },
+              {
+                name: '❯   Actor',
+                value: `${actor.name}${actor.id === 'application' ? ' (automatic)' : ''}`,
+                inline: true
+              }
+            ]
+          }
+        ]
+      };
 
-  console.log(valid);
-  if (!valid) return res.status(401).json({ message: '`Sentry-Hook-Signature` was invalid' });
+      await utils.sendWebhook(content);
+    } break;
+  }
 
   return res.status(200).json({ ok: true });
 });
 
-/*
-  // OH THIS WAS FOR TESTING LMAO
-  console.log(req.body);
-
-  const event = req.body.event;
-  const webhook = {
-    content: ':umbrella2: **| Received new event from Sentry, view below for trace**',
-    embeds: [
-      {
-        color: 0xE35D6A,
-        description: `**${req.body.message}**\n\n[[View Here]](${req.body.url})`,
-        fields: [
-          {
-            name: '❯   Project',
-            value: req.body.project || 'unknown',
-            inline: true
-          },
-          {
-            name: '❯   Environment',
-            value: event.environment || 'unknown',
-            inline: true
-          },
-          {
-            name: '❯   Platform SDK',
-            value: event.platform || 'unknown',
-            inline: true
-          }
-        ]
-      }
-    ]
-  };
-
-  const tags = [];
-  if (event.tags)
-    for (let i = 0; i < event.tags.length; i++) {
-      const [name, value] = event.tags[i];
-      tags.push(`• **${name}**: ${value}`);
-    }
-
-  if (tags.length) webhook.embeds[0].fields.push({
-    name: '❯   Tags',
-    value: tags.join('\n'),
-    inline: true
-  });
-
-  await utils.sendWebhook(webhook).catch(console.error);
-  return res.status(200).json({ ok: true });
-*/
+// ❯
+// •
 
 module.exports = router;

@@ -34,6 +34,21 @@ const http = new HttpClient({
   }
 });
 
+const Months = {
+  0: 'Jan',
+  1: 'Feb',
+  2: 'Mar',
+  3: 'Apr',
+  4: 'May',
+  5: 'Jun',
+  6: 'Jul',
+  7: 'Aug',
+  8: 'Sept',
+  9: 'Oct',
+  10: 'Nov',
+  11: 'Dec'
+};
+
 /**
  * Extra utilities used in this application
  */
@@ -44,11 +59,36 @@ module.exports = {
    * @param {string} signature The signature to use
    * @param {string} body The body to check
    */
-  validateSignature(signature, body, includeSecret = true) {
-    const sha = includeSecret ? createHmac('sha1', process.env.SECRET) : createHmac('sha1');
+  validateSignature(signature, body) {
+    const sha = createHmac('sha1', process.env.SECRET);
     const sig = `sha1=${sha.update(body).digest('hex')}`;
 
     return signature === sig;
+  },
+
+  /**
+   * Formats a ISO-8601-compliant date
+   * @param {string | Date} date The data to format
+   */
+  formatDate(date) {
+    const current = typeof date === 'string' ? new Date(date) : date;
+    const escape = (type) => `0${type}`.slice(-2);
+    const ampm = current.getHours() >= 12 ? 'PM' : 'AM';
+
+    return `${Months[current.getMonth()]} ${current.getDate()}${this.getOrdinal(current.getDate())}, ${current.getFullYear()} at ${escape(current.getHours())}:${escape(current.getMinutes())}:${escape(current.getSeconds())}${ampm}`;
+  },
+
+  getOrdinal(i) {
+    const j = i % 10;
+    const k = i % 100;
+
+    /* eslint-disable eqeqeq */
+    if (j == 1 && k != 11) return 'st';
+    if (j == 2 && k != 12) return 'nd';
+    if (j == 3 && k != 13) return 'rd';
+    /* eslint-enable eqeqeq */
+
+    return 'th';
   },
 
   /**
