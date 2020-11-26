@@ -2,12 +2,21 @@
 > :chestnut: **| Internal API for webhook systems made in Node.js using Express**
 
 ## GitHub Sponsors
-![created sponsor](./assets/created.png)
+### Sponsorship Created
+![created sponsor](./assets/github/created.png)
 
-![deleted sponsor](./assets/deleted.png)
+### Sponsorship Deleted
+![deleted sponsor](./assets/github/deleted.png)
 
 ## Sentry
-soon:tm:
+### Created
+> due to sentry being weird, i'll catch this later .w.
+
+### Resolved
+![resolved issue](./assets/sentry/resolved.png)
+
+### Ignored
+![ignored issue](./assets/sentry/ignored.png)
 
 ## Installation
 ### Requirements
