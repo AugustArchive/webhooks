@@ -127,16 +127,16 @@ router.post('/sentry', async (req, res) => {
                 value: data.platform,
                 inline: true
               },
-              {
-                name: '❯   First Spotted At',
-                value: utils.formatDate(data.firstSeen),
-                inline: true
-              },
-              {
-                name: '❯   Last Spotted At',
-                value: utils.formatDate(data.firstSeen),
-                inline: true
-              },
+              //{
+              //  name: '❯   First Spotted At',
+              //  value: utils.formatDate(data.firstSeen),
+              //  inline: true
+              //},
+              //{
+              //  name: '❯   Last Spotted At',
+              //  value: utils.formatDate(data.firstSeen),
+              //  inline: true
+              //},
               {
                 name: '❯   Actor',
                 value: `${actor.name}${actor.type === 'application' ? ' (automatic)' : ''}`,

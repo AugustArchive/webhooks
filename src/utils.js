@@ -72,6 +72,8 @@ module.exports = {
    */
   formatDate(date) {
     const current = typeof date === 'string' ? new Date(date) : date;
+    console.log(current);
+
     const escape = (type) => `0${type}`.slice(-2);
     const ampm = current.getHours() >= 12 ? 'PM' : 'AM';
 
