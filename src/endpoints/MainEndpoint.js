@@ -74,8 +74,6 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log(req.body);
-
   // just close it when we don't have it
   if (!req.headers.hasOwnProperty('sentry-hook-signature')) return res.status(204).end();
 
@@ -153,52 +151,50 @@ router.post('/sentry', async (req, res) => {
 
         await utils.sendWebhook(content);
       } break;
+
+      case 'created': {
+        const {
+          actor,
+          data: {
+            issue: data
+          }
+        } = req.body;
+
+        const content = {
+          content: `:umbrella2: Issue has been created by **${actor.name}**${actor.type === 'application' ? ' (Automated)' : ''} in project **${data.project.name}**`,
+          embeds: [
+            {
+              embeds: [
+                {
+                  title: `[ ${data.title} ]`,
+                  color: 0xE35D6A,
+                  fields: [
+                    {
+                      name: '❯   Platform',
+                      value: data.platform,
+                      inline: true
+                    },
+                    {
+                      name: '❯   Culprit',
+                      value: `**${data.culprit}** (${data.metadata.filename})`,
+                      inline: false
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        };
+
+        await utils.sendWebhook(content);
+      } break;
     }
 
     // do not go after this block
     return res.status(200).json({ ok: true });
+  } else {
+    return res.status(400).end(); // ends the request so we don't add anymore un-needed stuff
   }
-
-  const {
-    project_name: project,
-    event: data,
-    url
-  } = body;
-
-  const content = {
-    content: `:umbrella2: New issue has occured on Sentry in project **${project}**`,
-    embeds: [
-      {
-        title: `[ ${data.title} ]`,
-        url,
-        fields: [
-          {
-            name: '❯   Release (Environment)',
-            value: `${data.release} (**${data.environment}**)`,
-            inline: true
-          },
-          {
-            name: '❯   Platform',
-            value: data.platform,
-            inline: true
-          },
-          {
-            name: '❯   SDK',
-            value: `**${data.sdk.name}** v${data.sdk.version}`,
-            inline: true
-          },
-          {
-            name: '❯   Culprit',
-            value: `**${data.culprit}** (${data.metadata.filename})`,
-            inline: false
-          }
-        ]
-      }
-    ]
-  };
-
-  await utils.sendWebhook(content);
-  return res.status(200).json({ ok: true });
 });
 
 module.exports = router;
