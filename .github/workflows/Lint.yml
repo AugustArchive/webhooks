@@ -11,6 +11,17 @@ on:
       - LICENSE
       - '**.md'
       - 'renovate.json'
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - '.github/**'
+      - '.vscode/**'
+      - 'assets/**'
+      - '.gitignore'
+      - LICENSE
+      - '**.md'
+      - 'renovate.json'
 jobs:
   lint:
     runs-on: ubuntu-latest
