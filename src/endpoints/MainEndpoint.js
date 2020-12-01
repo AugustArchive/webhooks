@@ -164,22 +164,18 @@ router.post('/sentry', async (req, res) => {
           content: `:umbrella2: Issue has been created by **${actor.name}**${actor.type === 'application' ? ' (Automated)' : ''} in project **${data.project.name}**`,
           embeds: [
             {
-              embeds: [
+              title: `[ ${data.title} ]`,
+              color: 0xE35D6A,
+              fields: [
                 {
-                  title: `[ ${data.title} ]`,
-                  color: 0xE35D6A,
-                  fields: [
-                    {
-                      name: '❯   Platform',
-                      value: data.platform,
-                      inline: true
-                    },
-                    {
-                      name: '❯   Culprit',
-                      value: `**${data.culprit}** (${data.metadata.filename})`,
-                      inline: false
-                    }
-                  ]
+                  name: '❯   Platform',
+                  value: data.platform,
+                  inline: true
+                },
+                {
+                  name: '❯   Culprit',
+                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  inline: false
                 }
               ]
             }
