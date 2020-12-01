@@ -77,7 +77,7 @@ module.exports = {
     const escape = (type) => `0${type}`.slice(-2);
     const ampm = current.getHours() >= 12 ? 'PM' : 'AM';
 
-    return `${Months[current.getMonth()]} ${current.getDate()}${this.getOrdinal(current.getDate())}, ${current.getFullYear()} at ${escape(current.getHours())}:${escape(current.getMinutes())}:${escape(current.getSeconds())}${ampm}`;
+    return `${Months[current.getMonth()]} ${current.getDate()}${this.getOrdinal(current.getDate())}, ${current.getFullYear()} at ${escape(current.getHours())}:${escape(current.getMinutes())}:${escape(current.getSeconds())} ${ampm}`;
   },
 
   getOrdinal(i) {
@@ -121,15 +121,15 @@ module.exports = {
     const sponsorable = res2.json();
 
     const webhook = {
-      username: sponsorable.login,
-      avatar_url: sponsorable.avatar_url,
+      username: sponsor.login,
+      avatar_url: sponsor.avatar_url,
       embeds: [
         {
-          title: `[ 🎉 Sponsored ${sponsor.login} ]`,
+          title: `[ 🎉 Sponsored ${sponsorable.login} ]`,
           url: `https://github.com/sponsors/${sponsor.login}`,
           color: 0x4D4F9C,
           description: [
-            `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
+            `• **Joined At**: ${this.formatDate(new Date(data.sponsorship.created_at))}`,
             `• **Tier**: ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars} USD)`
           ].join('\n')
         }
@@ -155,8 +155,8 @@ module.exports = {
           color: 0x4D4F9C,
           description: [
             `• **Sponsor**: ${sponsorable.name}`,
-            `• **Effective Date**: ${new Date(data.effective_date)}`,
-            `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
+            `• **Effective Date**: ${this.formatDate(new Date(data.effective_date))}`,
+            `• **Joined At**: ${this.formatDate(new Date(data.sponsorship.created_at))}`,
             `• **Tier**: ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
           ].join('\n')
         }
@@ -182,8 +182,8 @@ module.exports = {
           color: 0x4D4F9C,
           description: [
             `• **Sponsor**: ${data.sponsorship.sponsor.login}`,
-            `• **Effective Date**: ${new Date(data.effective_date)}`,
-            `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
+            `• **Effective Date**: ${this.formatDate(new Date(data.effective_date))}`,
+            `• **Joined At**: ${this.formatDate(new Date(data.sponsorship.created_at))}`,
             `• **Tier**: ${data.changes.tier.from.name} ($${data.changes.tier.from.monthly_price_in_dollars}) -> ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
           ].join('\n')
         }
@@ -209,7 +209,7 @@ module.exports = {
           color: 0x4D4F9C,
           description: [
             `• **Sponsor**: ${sponsorable.name}`,
-            `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
+            `• **Joined At**: ${this.formatDate(new Date(data.sponsorship.created_at))}`,
             `• **Tier**: ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
           ].join('\n')
         }
@@ -235,8 +235,8 @@ module.exports = {
           color: 0x4D4F9C,
           description: [
             `• **Sponsor**: ${data.sponsorship.sponsorable.login}`,
-            `• **Joined At**: ${new Date(data.sponsorship.created_at)}`,
-            `• **From -> To Tier**: ${data.changes.tier.from.name} ($${data.changes.tier.from.monthly_price_in_dollars}) -> ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
+            `• **Joined At**: ${this.formatDate(new Date(data.sponsorship.created_at))}`,
+            `• **Tier**: ${data.changes.tier.from.name} ($${data.changes.tier.from.monthly_price_in_dollars}) -> ${data.sponsorship.tier.name} ($${data.sponsorship.tier.monthly_price_in_dollars})`
           ].join('\n')
         }
       ]
