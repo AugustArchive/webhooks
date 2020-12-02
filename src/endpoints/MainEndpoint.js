@@ -38,7 +38,7 @@ router.post('/github', async (req, res) => {
     const type = data.hook.type;
     if (type === 'SponsorsListing') {
       await utils.sendWebhook({
-        content: `[**GitHub Sponsors Webhook | ${data.sender.login}**]: Webhook linked successfully :thumbsup:`
+        content: `:umbrella2: Sponsors webhook for **${data.sender.login}** has been setup successfully.`
       });
 
       return res.status(200).json({ ok: true });
@@ -74,6 +74,9 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
+  console.log(req.body); // imma keep logging these for more events :eyes:
+  console.log(req.headers);
+
   // just close it when we don't have it
   if (!req.headers.hasOwnProperty('sentry-hook-signature')) return res.status(204).end();
 

@@ -10,7 +10,7 @@
 
 ## Sentry
 ### Created
-> due to sentry being weird, i'll catch this later .w.
+![created issue](./assets/sentry/issue.png)
 
 ### Resolved
 ![resolved issue](./assets/sentry/resolved.png)
