@@ -1,0 +1,8 @@
+.github/
+assets/
+node_modules/
+
+LICENSE
+README.md
+renovate.json
+*.log

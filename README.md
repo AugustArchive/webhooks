@@ -29,10 +29,12 @@
 - Follow the [configuration](#configuration) guide
 - Run the application with `npm start` and it should be booted up!
 
-### Process (Docker)
+### Process (Docker, locally)
 > This process is recommended for production environments!
 >
 > If you are running Windows or macOS, install **Docker Desktop** before continuing.
+>
+> If you wanna use a custom port, bind the port to `3621` (`-p <port>:3621`, ex. `-p 9999:3621`)
 
 - [Fork](https://github.com/auguwu/webhooks/fork) this repository and clone it on your machine (``git clone https://github.com/$USERNAME/webhooks``), omit `$USERNAME` with your GitHub username
 - Follow the [configuration](#configuration) guide

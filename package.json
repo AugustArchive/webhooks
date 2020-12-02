@@ -1,7 +1,7 @@
 {
   "name": "@august/webhooks",
   "description": "🌰 Internal API for webhook systems made in Node.js using Express",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "main": "src/app.js",
   "license": "MIT",
   "author": "Chris \"August\" Hernandez <august@augu.dev>",

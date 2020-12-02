@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:alpine
 
 LABEL MAINTAINER="Chris \"August\" Hernandez <august@augu.dev>"
 WORKDIR /opt/webhooks
@@ -10,4 +10,4 @@ RUN npm run lint
 
 ENV CONTAINER=true
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "start" ]
