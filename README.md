@@ -50,7 +50,7 @@
 - Run `docker run -d -p 3621:3621 registry.floofy.dev/webhooks` to run the image, it should create a default file
 if on first installation and should be running. It should print out a image ID, which is crucial for endpoints.
 - Run `docker exec -it <image ID> /bin/sh` to create a bash session, run `ls` to check if everything is working!
-- Edit the `.env` file with the valid [configuration](#configuration).
+- Edit the `.env` file with the valid [configuration](#configuration) to your liking.
 - Restart the container (`docker restart <image ID>`)
 
 ## Configuration
