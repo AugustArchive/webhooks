@@ -2,7 +2,9 @@
 assets/
 node_modules/
 
+.env
 LICENSE
 README.md
 renovate.json
 *.log
+*.lock

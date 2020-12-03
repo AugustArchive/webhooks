@@ -21,46 +21,83 @@
  */
 
 const { createLogger } = require('@augu/logging');
+const { existsSync } = require('fs');
 const { join } = require('path');
 const dotenv = require('@augu/dotenv');
 const Server = require('./structures/Server');
+const util = require('./utils');
 
 const logger = createLogger({ namespace: 'Master', transports: [] });
-dotenv.parse({
-  populate: true,
-  file: join(__dirname, '..', '.env'),
-  schema: {
-    DISCORD_WEBHOOK_URL: {
-      type: 'string',
-      default: undefined
-    },
-    NODE_ENV: {
-      type: 'string',
-      oneOf: ['development', 'production'],
-      default: 'development'
-    },
-    SECRET: 'string',
-    PORT: {
-      default: 3621,
-      type: 'int'
+const envPath = join(__dirname, '..', '.env');
+const argv = process.argv.slice(2);
+
+async function main() {
+  logger.info(`:mag: Looking for .env in "${envPath}"...`);
+
+  if (!existsSync(envPath)) {
+    logger.warn('No file exists, assuming first installation');
+    try {
+      await util.createConfigFile();
+      logger.info(`Created .env file in "${envPath}"`);
+    } catch(ex) {
+      logger.error(`Unable to create .env file in "${envPath}"`, ex);
+      process.exit(1);
+    }
+  } else {
+    logger.info(':thumbsup: Found the .env file, now booting...');
+  }
+
+  if (argv[0] === '--config' || argv[0] === '-c') {
+    if (existsSync(envPath)) {
+      logger.warn(`.env file is located at "${envPath}", run this without \`--config\` or \`-c\` arg(s).`);
+      process.exit(0);
+    }
+
+    try {
+      await util.createConfigFile();
+      logger.info(`Created .env file in "${envPath}"`);
+    } catch(ex) {
+      logger.error(`Unable to create .env file in "${envPath}"`, ex);
+      process.exit(1);
     }
   }
-});
 
-logger.info(`Now creating service... (${process.env.DOCKER_CONTAINER === 'true' ? 'containerized' : 'not using Docker'})`);
-const server = new Server();
-
-server
-  .load()
-  .then(() => logger.info('Initialised server.'))
-  .catch((error) => {
-    logger.error(':x: Unable to initialise server', error);
-    process.exit(1);
+  dotenv.parse({
+    populate: true,
+    file: join(__dirname, '..', '.env'),
+    schema: {
+      DISCORD_WEBHOOK_URL: {
+        type: 'string',
+        default: undefined
+      },
+      NODE_ENV: {
+        type: 'string',
+        oneOf: ['development', 'production'],
+        default: 'development'
+      },
+      SECRET: 'string',
+      PORT: {
+        default: 3621,
+        type: 'int'
+      }
+    }
   });
 
-process.on('SIGINT', () => {
-  logger.warn('Received SIGINT, now closing...');
-  server.close();
+  const server = new Server();
 
-  process.exit(0);
-});
+  try {
+    await server.load();
+  } catch(ex) {
+    logger.error('Unable to initialize server', ex);
+    process.exit(1);
+  }
+
+  process.on('SIGINT', () => {
+    logger.warn('Received SIGINT, now closing...');
+    server.close();
+
+    process.exit(0);
+  });
+}
+
+main();

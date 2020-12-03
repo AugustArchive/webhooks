@@ -41,6 +41,18 @@
 - Create the image with `npm run docker:build`, it should create an image called `webhooks` with the `latest` tag.
 - Run the image with `npm run docker:run`, it should create a container with a specified ID and it should be running!
 
+### Process (Docker, registry)
+> This process is recommended to not clone the repository and re-build the image every-time a change is made.
+>
+> New images are built on every release, so you can repeat this process!
+
+- Run `docker pull registry.floofy.dev/webhooks` to get the latest image available
+- Run `docker run -d -p 3621:3621 registry.floofy.dev/webhooks` to run the image, it should create a default file
+if on first installation and should be running. It should print out a image ID, which is crucial for endpoints.
+- Run `docker exec -it <image ID> /bin/sh` to create a bash session, run `ls` to check if everything is working!
+- Edit the `.env` file with the valid [configuration](#configuration).
+- Restart the container (`docker restart <image ID>`)
+
 ## Configuration
 ```env
 # The webhook URL (required)

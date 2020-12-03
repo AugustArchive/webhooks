@@ -22,9 +22,11 @@
 
 /* eslint-disable camelcase */
 
+const { promises: fs } = require('fs');
 const { HttpClient } = require('@augu/orchid');
 const { createHmac } = require('crypto');
 const { version } = require('../package.json');
+const { join } = require('path');
 
 const http = new HttpClient({
   defaults: {
@@ -33,6 +35,14 @@ const http = new HttpClient({
     }
   }
 });
+
+const DEFAULT_CONFIG = `
+# Example configuration
+# If you are running Docker, run the installation notes for more information
+
+NODE_ENV=development
+PORT=3621
+`;
 
 const Months = {
   0: 'Jan',
@@ -243,6 +253,10 @@ module.exports = {
     };
 
     await this.sendWebhook(webhook);
+  },
+
+  createConfigFile() {
+    return fs.writeFile(join(__dirname, '..', '.env'), DEFAULT_CONFIG);
   }
 
 };
