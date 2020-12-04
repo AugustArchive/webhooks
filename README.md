@@ -18,6 +18,12 @@
 ### Ignored
 ![ignored issue](./assets/sentry/ignored.png)
 
+### Assigned (self)
+![assigned (self)](./assets/sentry/assigned_self.png)
+
+### Assigned (normal)
+![assigned (member)](./assets/sentry/assigned_member.png)
+
 ## Installation
 ### Requirements
 - Docker (optional)
