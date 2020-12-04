@@ -8,6 +8,4 @@ RUN npm i -g eslint
 RUN npm ci
 RUN npm run lint
 
-ENV CONTAINER=true
-
 CMD [ "npm", "run", "start" ]

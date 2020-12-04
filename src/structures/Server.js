@@ -54,7 +54,21 @@ module.exports = class Server {
     });
 
     await this.loadEndpoints();
-    this._server = this.app.listen(process.env.PORT || 3621, () => this.logger.success(`:sparkles: Now listening at http://localhost:${process.env.PORT || 3621}`));
+    this._server = this.app.listen(process.env.PORT || 3621);
+
+    let address = this._server.address();
+    const isUnixSocket = typeof address === 'string';
+
+    if (!isUnixSocket) {
+      if (address.address.indexOf(':') === -1) {
+        address = `${address.address}:${address.port}`;
+      } else {
+        address = `localhost:${address.port}`;
+      }
+    }
+
+    const prefix = isUnixSocket ? 'unix:///' : 'http://';
+    this.logger.info(`:sparkles: Now listening at ${prefix}${address}`);
   }
 
   close() {

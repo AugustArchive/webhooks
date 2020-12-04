@@ -1,0 +1,4 @@
+#name: Push to registry.floofy.dev
+#on: [release]
+#jobs:
+#  docker:

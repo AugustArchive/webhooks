@@ -107,7 +107,12 @@ router.post('/sentry', async (req, res) => {
                 {
                   name: '❯   Culprit',
                   value: `**${data.culprit}** (${data.metadata.filename})`,
-                  inline: false
+                  inline: true
+                },
+                {
+                  name: '❯   First / Last Seen At',
+                  value: `**${utils.formatDate(data.firstSeen)}** / **${utils.formatDate(data.lastSeen)}**`,
+                  inline: true
                 }
               ]
             }
@@ -138,14 +143,14 @@ router.post('/sentry', async (req, res) => {
                   inline: true
                 },
                 {
-                  name: '❯    Occured',
-                  value: Number(data.count).toLocaleString('en-US'),
+                  name: '❯   Culprit',
+                  value: `**${data.culprit}** (${data.metadata.filename})`,
                   inline: true
                 },
                 {
-                  name: '❯   Culprit',
-                  value: `**${data.culprit}** (${data.metadata.filename})`,
-                  inline: false
+                  name: '❯   First / Last Seen At',
+                  value: `**${utils.formatDate(data.firstSeen)}** / **${utils.formatDate(data.lastSeen)}**`,
+                  inline: true
                 }
               ]
             }
@@ -178,7 +183,12 @@ router.post('/sentry', async (req, res) => {
                 {
                   name: '❯   Culprit',
                   value: `**${data.culprit}** (${data.metadata.filename})`,
-                  inline: false
+                  inline: true
+                },
+                {
+                  name: '❯   First / Last Seen At',
+                  value: `**${utils.formatDate(data.firstSeen)}** / **${utils.formatDate(data.lastSeen)}**`,
+                  inline: true
                 }
               ]
             }
@@ -186,6 +196,43 @@ router.post('/sentry', async (req, res) => {
         };
 
         await utils.sendWebhook(content);
+      } break;
+
+      case 'assigned': {
+        const {
+          data,
+          actor
+        } = req.body;
+
+        const isSelf = data.assignee.name === actor.name;
+        const webhook = {
+          content: `:umbrella2: **${actor.name}** has assigned ${isSelf ? 'themselves' : data.actor.name} to handle the issue:`,
+          embeds: [
+            {
+              title: `[ ${data.title} ]`,
+              color: 0xE35D6A,
+              fields: [
+                {
+                  name: '❯   Platform',
+                  value: data.platform,
+                  inline: true
+                },
+                {
+                  name: '❯   Culprit',
+                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  inline: true
+                },
+                {
+                  name: '❯   First / Last Seen At',
+                  value: `**${utils.formatDate(data.firstSeen)}** / **${utils.formatDate(data.lastSeen)}**`,
+                  inline: true
+                }
+              ]
+            }
+          ]
+        };
+
+        await utils.sendWebhook(webhook);
       } break;
     }
 

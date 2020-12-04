@@ -53,6 +53,16 @@ if on first installation and should be running. It should print out a image ID, 
 - Edit the `.env` file with the valid [configuration](#configuration) to your liking.
 - Restart the container (`docker restart <image ID>`)
 
+## Docker Compose Example
+```yml
+services:
+  webhooks:
+    restart: always
+    image: registry.floofy.dev/webhooks
+    ports:
+      - 'custom:3621'
+```
+
 ## Configuration
 ```env
 # The webhook URL (required)
