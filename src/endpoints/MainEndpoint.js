@@ -219,9 +219,10 @@ router.post('/sentry', async (req, res) => {
           actor
         } = req.body;
 
+        console.log(data.issue.project);
         const isSelf = data.assignee.name === actor.name;
         const content = {
-          content: `:umbrella2: **${actor.name}** has assigned ${isSelf ? 'themselves' : data.actor.name} to handle the issue in project **${data.issue.project.name}**:`,
+          content: `:umbrella2: **${actor.name}** has assigned ${isSelf ? 'themselves' : data.actor.name} to handle the issue`,
           embeds: [
             {
               title: `[ ${data.issue.title} ]`,
