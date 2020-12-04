@@ -205,26 +205,26 @@ router.post('/sentry', async (req, res) => {
         } = req.body;
 
         const isSelf = data.assignee.name === actor.name;
-        const webhook = {
+        const content = {
           content: `:umbrella2: **${actor.name}** has assigned ${isSelf ? 'themselves' : data.actor.name} to handle the issue:`,
           embeds: [
             {
-              title: `[ ${data.title} ]`,
+              title: `[ ${data.issue.title} ]`,
               color: 0xE35D6A,
               fields: [
                 {
                   name: '❯   Platform',
-                  value: data.platform,
+                  value: data.issue.platform,
                   inline: true
                 },
                 {
                   name: '❯   Culprit',
-                  value: `**${data.culprit}**`,
+                  value: `**${data.issue.culprit}** (${data.issue.metadata.filename})`,
                   inline: true
                 },
                 {
                   name: '❯   First / Last Seen At',
-                  value: `**${utils.formatDate(data.firstSeen)}** / **${utils.formatDate(data.lastSeen)}**`,
+                  value: `**${utils.formatDate(data.issue.firstSeen)}** / **${utils.formatDate(data.issue.lastSeen)}**`,
                   inline: true
                 }
               ]
@@ -232,7 +232,7 @@ router.post('/sentry', async (req, res) => {
           ]
         };
 
-        await utils.sendWebhook(webhook);
+        await utils.sendWebhook(content);
       } break;
     }
 
