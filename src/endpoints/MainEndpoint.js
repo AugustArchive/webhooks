@@ -105,14 +105,19 @@ router.post('/sentry', async (req, res) => {
                   inline: true
                 },
                 {
-                  name: '❯   Culprit',
-                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  name: '❯   First Seen At',
+                  value: `**${utils.formatDate(data.firstSeen)}**`,
                   inline: true
                 },
                 {
-                  name: '❯   First / Last Seen At',
-                  value: `**${utils.formatDate(data.firstSeen)}** / **${utils.formatDate(data.lastSeen)}**`,
+                  name: '❯  Last Seen At',
+                  value: `**${utils.formatDate(data.lastSeen)}**`,
                   inline: true
+                },
+                {
+                  name: '❯   Culprit',
+                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  inline: false
                 }
               ]
             }
@@ -143,14 +148,19 @@ router.post('/sentry', async (req, res) => {
                   inline: true
                 },
                 {
-                  name: '❯   Culprit',
-                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  name: '❯   First Seen At',
+                  value: `**${utils.formatDate(data.firstSeen)}**`,
                   inline: true
                 },
                 {
-                  name: '❯   First / Last Seen At',
-                  value: `**${utils.formatDate(data.firstSeen)}** / **${utils.formatDate(data.lastSeen)}**`,
+                  name: '❯  Last Seen At',
+                  value: `**${utils.formatDate(data.lastSeen)}**`,
                   inline: true
+                },
+                {
+                  name: '❯   Culprit',
+                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  inline: false
                 }
               ]
             }
@@ -181,14 +191,19 @@ router.post('/sentry', async (req, res) => {
                   inline: true
                 },
                 {
-                  name: '❯   Culprit',
-                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  name: '❯   First Seen At',
+                  value: `**${utils.formatDate(data.firstSeen)}**`,
                   inline: true
                 },
                 {
-                  name: '❯   First / Last Seen At',
-                  value: `**${utils.formatDate(data.firstSeen)}** / **${utils.formatDate(data.lastSeen)}**`,
+                  name: '❯  Last Seen At',
+                  value: `**${utils.formatDate(data.lastSeen)}**`,
                   inline: true
+                },
+                {
+                  name: '❯   Culprit',
+                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  inline: false
                 }
               ]
             }
@@ -206,7 +221,7 @@ router.post('/sentry', async (req, res) => {
 
         const isSelf = data.assignee.name === actor.name;
         const content = {
-          content: `:umbrella2: **${actor.name}** has assigned ${isSelf ? 'themselves' : data.actor.name} to handle the issue:`,
+          content: `:umbrella2: **${actor.name}** has assigned ${isSelf ? 'themselves' : data.actor.name} to handle the issue in project **${data.issue.project.name}**:`,
           embeds: [
             {
               title: `[ ${data.issue.title} ]`,
@@ -218,14 +233,19 @@ router.post('/sentry', async (req, res) => {
                   inline: true
                 },
                 {
-                  name: '❯   Culprit',
-                  value: `**${data.issue.culprit}** (${data.issue.metadata.filename})`,
+                  name: '❯   First Seen At',
+                  value: `**${utils.formatDate(data.issue.firstSeen)}**`,
                   inline: true
                 },
                 {
-                  name: '❯   First / Last Seen At',
-                  value: `**${utils.formatDate(data.issue.firstSeen)}** / **${utils.formatDate(data.issue.lastSeen)}**`,
+                  name: '❯  Last Seen At',
+                  value: `**${utils.formatDate(data.issue.lastSeen)}**`,
                   inline: true
+                },
+                {
+                  name: '❯   Culprit',
+                  value: `**${data.issue.culprit}** (${data.issue.metadata.filename})`,
+                  inline: false
                 }
               ]
             }
