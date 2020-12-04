@@ -12,7 +12,7 @@ on:
       - '**.md'
       - 'renovate.json'
 jobs:
-  lint:
+  deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
