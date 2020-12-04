@@ -219,7 +219,7 @@ router.post('/sentry', async (req, res) => {
                 },
                 {
                   name: '❯   Culprit',
-                  value: `**${data.culprit}** (${data.metadata.filename})`,
+                  value: `**${data.culprit}**`,
                   inline: true
                 },
                 {
