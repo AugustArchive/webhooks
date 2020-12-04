@@ -1,3 +1,5 @@
+name: Push to registry.floofy.dev
+
 #name: Push to registry.floofy.dev
 #on: [release]
 #jobs:
