@@ -265,6 +265,8 @@ router.post('/sentry', async (req, res) => {
 router.post('/docker', async (req, res) => {
   console.trace(req.headers);
   console.trace(req.body);
+
+  return res.status(204).end();
 });
 
 module.exports = router;
