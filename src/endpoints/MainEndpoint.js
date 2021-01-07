@@ -263,7 +263,8 @@ router.post('/sentry', async (req, res) => {
 });
 
 router.post('/docker', async (req, res) => {
-  console.log(req.body);
+  console.trace(req.headers);
+  console.trace(req.body);
 });
 
 module.exports = router;
