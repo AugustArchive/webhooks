@@ -1,5 +1,5 @@
 # webhook.floofy.dev
-> :chestnut: **| Internal API for webhook systems made in Node.js using Express**
+> 🌰 **Internal API for webhook systems made in Node.js using Express**
 
 ## GitHub Sponsors
 ### Sponsorship Created
@@ -73,6 +73,9 @@ services:
 ```env
 # The webhook URL (required)
 DISCORD_WEBHOOK_URL=
+
+# Endpoints you wanna use, seperated using `,`
+ENDPOINTS=/github,/sentry,/docker
 
 # The environment of the application
 # Accepts: 'development' or 'production'
