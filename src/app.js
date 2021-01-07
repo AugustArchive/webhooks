@@ -64,6 +64,7 @@ async function main() {
 
   dotenv.parse({
     populate: true,
+    delimiter: ',',
     file: join(__dirname, '..', '.env'),
     schema: {
       DISCORD_WEBHOOK_URL: {
@@ -72,7 +73,6 @@ async function main() {
       },
       ENDPOINTS: {
         type: 'array',
-        oneOf: ['/github', '/sentry', '/docker'],
         default: []
       },
       NODE_ENV: {
