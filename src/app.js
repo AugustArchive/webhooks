@@ -70,6 +70,11 @@ async function main() {
         type: 'string',
         default: undefined
       },
+      ENDPOINTS: {
+        type: 'array',
+        oneOf: ['/github', '/sentry', '/docker'],
+        default: []
+      },
       NODE_ENV: {
         type: 'string',
         oneOf: ['development', 'production'],

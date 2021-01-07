@@ -40,6 +40,7 @@ const DEFAULT_CONFIG = `
 # Example configuration
 # If you are running Docker, run the installation notes for more information
 
+ENDPOINTS=/github,/sentry,/docker
 NODE_ENV=development
 PORT=3621
 `;
@@ -211,6 +212,9 @@ module.exports = {
     const res = await http.get(data.sponsorship.sponsor.url);
     const sponsor = res.json();
 
+    const res2 = await http.get(data.sponsorship.sponsorable.url);
+    const sponsorable = res2.json();
+
     const webhook = {
       username: sponsor.login,
       avatar_url: sponsor.avatar_url,
@@ -258,6 +262,10 @@ module.exports = {
 
   createConfigFile() {
     return fs.writeFile(join(__dirname, '..', '.env'), DEFAULT_CONFIG);
+  },
+
+  enabled(type) {
+    return process.env.ENDPOINTS.split(',').includes(`/${type}`);
   }
 
 };

@@ -49,7 +49,7 @@ module.exports = class Server {
   async load() {
     this.app.use(express.json());
     this.app.use((_, res, next) => {
-      res.setHeader('X-Powered-By', 'auguwu tehc (https://github.com/auguwu/webhooks)');
+      res.setHeader('X-Powered-By', 'a cute furry doing cute things >W< (https://github.com/auguwu/webhooks)');
       next();
     });
 

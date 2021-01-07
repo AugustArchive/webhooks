@@ -113,5 +113,8 @@ PORT=
   - **Resolved Issue**
   - **Ignored Issue**
 
+### Docker Registry
+Coming soon.
+
 ## License
 **webhooks** is released under the [MIT](/LICENSE) license.

@@ -28,6 +28,7 @@ const router = Router();
 router.get('/', (_, res) => res.status(200).json({ hello: 'world' }));
 
 router.post('/github', async (req, res) => {
+  if (!utils.enabled('github')) return res.status(500).json({ message: 'GitHub Sponsors is not enabled' });
   if (!req.headers.hasOwnProperty('x-hub-signature')) return res.status(406).json({ message: 'Missing `X-Hub-Signature` signature header' });
 
   const valid = utils.validateSignature(req.headers['x-hub-signature'], JSON.stringify(req.body));
@@ -74,11 +75,9 @@ router.post('/github', async (req, res) => {
 });
 
 router.post('/sentry', async (req, res) => {
-  console.log(req.body); // imma keep logging these for more events :eyes:
-  console.log(req.headers);
-
   // just close it when we don't have it
   if (!req.headers.hasOwnProperty('sentry-hook-signature')) return res.status(204).end();
+  if (!utils.enabled('sentry')) return res.status(500).json({ message: 'Sentry is not enabled' });
 
   // for resolve / ignore errors
   const body = req.body;
@@ -261,6 +260,10 @@ router.post('/sentry', async (req, res) => {
   } else {
     return res.status(400).end(); // ends the request so we don't add anymore un-needed stuff
   }
+});
+
+router.post('/docker', async (req, res) => {
+  console.log(req.body);
 });
 
 module.exports = router;
