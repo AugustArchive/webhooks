@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 August
+ * Copyright (c) 2020-2021 August
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-const { createLogger } = require('@augu/logging');
 const { promises: fs } = require('fs');
+const Loggaby = require('loggaby');
 const express = require('express');
 const { join } = require('path');
 
@@ -29,14 +29,10 @@ module.exports = class Server {
   constructor() {
     /**
      * The logger
-     * @type {import('@augu/logging').ILogger}
      */
-    this.logger = createLogger({
-      namespace: 'Server',
-      transports: [],
-      levels: {
-        success: 'green'
-      }
+    this.logger = new Loggaby({
+      transports: [new Loggaby.TerminalTransport()],
+      format: '{cyan}[{level.name}] {white}~> '
     });
 
     /**
@@ -68,12 +64,12 @@ module.exports = class Server {
     }
 
     const prefix = isUnixSocket ? 'unix:///' : 'http://';
-    this.logger.info(`:sparkles: Now listening at ${prefix}${address}`);
+    this.logger.log(`Now listening at ${prefix}${address}`);
   }
 
   close() {
     this._server.close();
-    this.logger.warn(':pencil2: Server closed.');
+    this.logger.warn('Server closed.');
   }
 
   async loadEndpoints() {
@@ -83,7 +79,7 @@ module.exports = class Server {
       const router = require(join(process.cwd(), 'endpoints', file));
 
       this.app.use(router);
-      this.logger.success(`:white_check_mark: Loaded route "${file.split('.').shift()}"`);
+      this.logger.log(`:white_check_mark: Loaded route "${file.split('.').shift()}"`);
     }
   }
 };

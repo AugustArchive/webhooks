@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 August
+ * Copyright (c) 2020-2021 August
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,31 +20,31 @@
  * SOFTWARE.
  */
 
-const { createLogger } = require('@augu/logging');
 const { existsSync } = require('fs');
 const { join } = require('path');
+const Loggaby = require('loggaby');
 const dotenv = require('@augu/dotenv');
 const Server = require('./structures/Server');
 const util = require('./utils');
 
-const logger = createLogger({ namespace: 'Master', transports: [] });
+const logger = new Loggaby({ transports: [new Loggaby.TerminalTransport()], format: '{cyan}[{level.name}]{white} ~> ' });
 const envPath = join(__dirname, '..', '.env');
 const argv = process.argv.slice(2);
 
 async function main() {
-  logger.info(`:mag: Looking for .env in "${envPath}"...`);
+  logger.log(`Looking for .env in "${envPath}"...`);
 
   if (!existsSync(envPath)) {
     logger.warn('No file exists, assuming first installation');
     try {
       await util.createConfigFile();
-      logger.info(`Created .env file in "${envPath}"`);
+      logger.log(`Created .env file in "${envPath}"`);
     } catch(ex) {
       logger.error(`Unable to create .env file in "${envPath}"`, ex);
       process.exit(1);
     }
   } else {
-    logger.info(':thumbsup: Found the .env file, now booting...');
+    logger.log('Found the .env file, now booting...');
   }
 
   if (argv[0] === '--config' || argv[0] === '-c') {
@@ -55,7 +55,7 @@ async function main() {
 
     try {
       await util.createConfigFile();
-      logger.info(`Created .env file in "${envPath}"`);
+      logger.log(`Created .env file in "${envPath}"`);
     } catch(ex) {
       logger.error(`Unable to create .env file in "${envPath}"`, ex);
       process.exit(1);

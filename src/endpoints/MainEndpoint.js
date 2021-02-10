@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 August
+ * Copyright (c) 2020-2021 August
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,14 +49,6 @@ router.post('/github', async (req, res) => {
   // For sponsorships
   if (utils.isSponsorshipEvent(data)) {
     switch (data.action) {
-      case 'pending_tier_change':
-        await utils.onSponsorPendingTierChange(req.body);
-        break;
-
-      case 'pending_cancellation':
-        await utils.onSponsorPendingCancel(req.body);
-        break;
-
       case 'tier_changed':
         await utils.onSponsorTierChange(req.body);
         break;
@@ -104,13 +96,8 @@ router.post('/sentry', async (req, res) => {
                   inline: true
                 },
                 {
-                  name: '❯   First Seen At',
+                  name: '❯   Seen At',
                   value: `**${utils.formatDate(data.firstSeen)}**`,
-                  inline: true
-                },
-                {
-                  name: '❯  Last Seen At',
-                  value: `**${utils.formatDate(data.lastSeen)}**`,
                   inline: true
                 },
                 {
@@ -147,13 +134,8 @@ router.post('/sentry', async (req, res) => {
                   inline: true
                 },
                 {
-                  name: '❯   First Seen At',
+                  name: '❯   Seen At',
                   value: `**${utils.formatDate(data.firstSeen)}**`,
-                  inline: true
-                },
-                {
-                  name: '❯  Last Seen At',
-                  value: `**${utils.formatDate(data.lastSeen)}**`,
                   inline: true
                 },
                 {
@@ -190,13 +172,8 @@ router.post('/sentry', async (req, res) => {
                   inline: true
                 },
                 {
-                  name: '❯   First Seen At',
+                  name: '❯  Seen At',
                   value: `**${utils.formatDate(data.firstSeen)}**`,
-                  inline: true
-                },
-                {
-                  name: '❯  Last Seen At',
-                  value: `**${utils.formatDate(data.lastSeen)}**`,
                   inline: true
                 },
                 {
@@ -220,7 +197,7 @@ router.post('/sentry', async (req, res) => {
 
         const isSelf = data.assignee.name === actor.name;
         const content = {
-          content: `:umbrella2: **${actor.name}** has assigned ${isSelf ? 'themselves' : `**${data.assignee.name}**`} to handle the issue in project **${data.issue.project.name}**`,
+          content: `:umbrella2: **${actor.name}** has assigned ${isSelf ? 'themself' : `**${data.assignee.name}**`} to handle the issue in project **${data.issue.project.name}**`,
           embeds: [
             {
               title: `[ ${data.issue.title} ]`,
@@ -232,13 +209,8 @@ router.post('/sentry', async (req, res) => {
                   inline: true
                 },
                 {
-                  name: '❯   First Seen At',
+                  name: '❯   Seen At',
                   value: `**${utils.formatDate(data.issue.firstSeen)}**`,
-                  inline: true
-                },
-                {
-                  name: '❯  Last Seen At',
-                  value: `**${utils.formatDate(data.issue.lastSeen)}**`,
                   inline: true
                 },
                 {
@@ -260,13 +232,6 @@ router.post('/sentry', async (req, res) => {
   } else {
     return res.status(400).end(); // ends the request so we don't add anymore un-needed stuff
   }
-});
-
-router.post('/docker', async (req, res) => {
-  console.trace(req.headers);
-  console.trace(req.body);
-
-  return res.status(204).end();
 });
 
 module.exports = router;

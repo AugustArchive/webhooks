@@ -1,6 +1,6 @@
 FROM node:alpine
 
-LABEL MAINTAINER="Chris \"August\" Hernandez <august@augu.dev>"
+LABEL MAINTAINER="Chris \"August\" Hernandez <cutie@floofy.dev>"
 WORKDIR /opt/webhooks
 COPY package*.json .
 COPY . .
