@@ -16,7 +16,7 @@
     "@augu/dotenv": "1.2.0",
     "@augu/orchid": "1.8.2",
     "express": "4.17.1",
-    "loggaby": "4.0.1"
+    "loggaby": "4.0.2"
   },
   "devDependencies": {
     "@augu/eslint-config": "1.10.0",
