@@ -14,7 +14,7 @@
   "dependencies": {
     "@augu/collections": "1.0.3",
     "@augu/dotenv": "1.2.0",
-    "@augu/orchid": "2.0.1",
+    "@augu/orchid": "2.1.0",
     "express": "4.17.1",
     "loggaby": "4.0.2"
   },
