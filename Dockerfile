@@ -6,6 +6,6 @@ COPY package*.json .
 COPY . .
 RUN npm i -g eslint
 RUN npm ci
-RUN npm run lint
+RUN npm run build
 
 CMD [ "npm", "run", "start" ]

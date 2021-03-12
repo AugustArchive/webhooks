@@ -8,8 +8,9 @@
   "scripts": {
     "docker:build": "docker build . -t webhooks:latest",
     "docker:run": "docker run -d webhooks:latest",
-    "start": "cd src && node app.js",
-    "lint": "eslint src --ext .js --fix"
+    "build": "npm run lint && rm -rf build && tsc",
+    "start": "cd build && node main.js",
+    "lint": "eslint src --ext .ts --fix"
   },
   "dependencies": {
     "@augu/collections": "1.0.5",

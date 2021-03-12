@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 13.x, 14.x]
+        node-version: [14.x, 15.x]
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
@@ -45,3 +45,6 @@ jobs:
 
       - name: Lint the repository
         run: npm run lint
+
+      - name: Compile project for type errors
+        run: tsc --noEmit
