@@ -1,53 +1,53 @@
-name: Deploy
-on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '.github/**'
-      - '.vscode/**'
-      - 'assets/**'
-      - '.gitignore'
-      - LICENSE
-      - '**.md'
-      - 'renovate.json'
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
+#name: Deploy
+#on:
+#  push:
+#    branches:
+#      - master
+#    paths-ignore:
+#      - '.github/**'
+#      - '.vscode/**'
+#      - 'assets/**'
+#      - '.gitignore'
+#      - LICENSE
+#      - '**.md'
+#      - 'renovate.json'
+#jobs:
+#  deploy:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        node-version: [14.x]
+#    steps:
+#      - name: Checkout the repository
+#        uses: actions/checkout@v2
 
-      - name: Use Node.js v${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+#      - name: Use Node.js v${{ matrix.node-version }}
+#        uses: actions/setup-node@v1
+#        with:
+#          node-version: ${{ matrix.node-version }}
 
-      - name: Install global dependencies
-        run: npm i -g eslint
+#      - name: Install global dependencies
+#        run: npm i -g eslint
 
-      - name: Install local dependencies
-        run: npm i
+#      - name: Install local dependencies
+#        run: npm i
 
-      - name: Lint the repository
-        run: npm run lint
+#      - name: Lint the repository
+#        run: npm run lint
 
-      - name: Update the application in real-time
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          port: 22
-          username: august
-          password: ${{ secrets.PASSWORD }}
+#      - name: Update the application in real-time
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.HOST }}
+#          port: 22
+#          username: august
+#          password: ${{ secrets.PASSWORD }}
 
           # TODO: use docker
-          script: |
-            cd ~/webhooks
-            git pull
-            rm -fr node_modules
-            rm yarn.lock
-            yarn
-            pm2 restart webhooks
+#          script: |
+#            cd ~/webhooks
+#            git pull
+#            rm -fr node_modules
+#            rm yarn.lock
+#            yarn
+#            pm2 restart webhooks
